@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Quote Generator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 750px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            text-align: center;
+        }
+
+        h1 {
+            font-family: 'Rock Salt', cursive;
+            font-size: 36px;
+            margin-bottom: 15px;
+        }
+
+        p {
+            margin: 15px 0;
+            font-size: 18px;
+            line-height: 1.6;
+        }
+
+        #random_quote {
+            font-size: 24px;
+            margin: 20px 0;
+            padding: 15px;
+            border-left: 5px solid #007bff;
+            background-color: #f0f8ff;
+            border-radius: 5px;
+        }
+
+        button, #tweet {
+            margin: 10px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        button {
+            background-color: #28a745;
+            color: white;
+        }
+
+        button:hover {
+            background-color: #218838;
+            transform: scale(1.05);
+        }
+
+        #tweet {
+            background-color: #007bff;
+            color: white;
+        }
+
+        #tweet:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+
+<div class='container text-center'>
+    <h1>Random Quotes</h1>
+     <button id='newQuote'>New Quote</button>
+    <a id='tweet' href='#' target='_blank' role='button'><i class="fab fa-twitter"></i> Tweet the Quote</a>
+    <p id='random_quote'></p>
+</div>
+
+<script>
+    // JSONP callback function to handle the response
+    function parseQuote(response) {
+        const quoteText = response.quoteText;
+        const quoteAuthor = response.quoteAuthor || "Unknown";
+        document.getElementById('random_quote').innerHTML = `<p class='lead text-center'>"${quoteText}"<br/>— ${quoteAuthor}</p>`;
+        document.getElementById('tweet').href = `https://twitter.com/intent/tweet?text=${encodeURIComponent('"' + quoteText + '" — ' + quoteAuthor)}`;
+    }
+
+    function randomQuote() {
+        const script = document.createElement('script');
+        script.src = 'https://api.forismatic.com/api/1.0/?method=getQuote&format=jsonp&lang=en&jsonp=parseQuote';
+        document.body.appendChild(script);
+        document.body.removeChild(script); // Clean up the script after it's used
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        randomQuote(); // Load a quote on page load
+        document.getElementById('newQuote').addEventListener('click', randomQuote);
+    });
+</script>
+
+</body>
+</html>
